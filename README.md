@@ -10,8 +10,6 @@ Go to https://www.coinapi.io/Pricing and create a FREE account
 
 Go to https://docs.coinapi.io/ and take a look at the documentation but mostly the exchange rates : https://docs.coinapi.io/#exchange-rates
 
-The url you should use looks like this
-
 # Step 4 - Fetch the current price of bitcoin (BTC) in US dollars (USD)
 
 The value we're interested from the API is the rate of Bitcoin in USD.
