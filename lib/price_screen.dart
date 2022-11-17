@@ -1,6 +1,8 @@
 import 'package:bitcoin_ticker/coin_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:developer';
+import 'package:bitcoin_ticker/services/exchangeRate.dart';
 import 'dart:io' show Platform;
 
 class PriceScreen extends StatefulWidget {
@@ -9,6 +11,15 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
+  int exchangeRate;
+  void getExchangeData() async {
+
+    ExchangeModel exchangeModel = ExchangeModel();
+    var exchangeData = await exchangeModel.getCurrency(selectedCurrency);
+    exchangeRate= exchangeData['rate'].round();
+    return;
+
+  }
   String selectedCurrency = 'USD';
 
   DropdownButton<String> androidDropdown() {
@@ -22,7 +33,7 @@ class _PriceScreenState extends State<PriceScreen> {
 
       dropdownItems.add(newItem);
     }
-
+    getExchangeData();
     return DropdownButton<String>(
       value: selectedCurrency,
       items: dropdownItems,
@@ -74,7 +85,7 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                 child: Text(
-                  '1 BTC = ? USD',
+                  '1 BTC = $exchangeRate $selectedCurrency',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,
@@ -90,6 +101,7 @@ class _PriceScreenState extends State<PriceScreen> {
             padding: EdgeInsets.only(bottom: 30.0),
             color: Colors.lightBlue,
             child: Platform.isIOS ? iOSPicker() : androidDropdown(),
+
           ),
         ],
       ),
