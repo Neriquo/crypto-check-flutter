@@ -2,6 +2,7 @@ import 'package:bitcoin_ticker/coin_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io' show Platform;
+import 'package:bitcoin_ticker/networking.dart';
 
 class PriceScreen extends StatefulWidget {
   @override
@@ -11,6 +12,9 @@ class PriceScreen extends StatefulWidget {
 class _PriceScreenState extends State<PriceScreen> {
   String selectedCurrency = 'USD';
 
+  double btcValue;
+
+  //ANDROID
   DropdownButton<String> androidDropdown() {
     List<DropdownMenuItem<String>> dropdownItems = [];
 
@@ -34,6 +38,26 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 
+  // On ramène la clé API dans le code
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setRate();
+  }
+
+  void setRate() async {
+    NetworkHelper networkHelper = NetworkHelper(
+        'https://rest.coinapi.io/v1/exchangerate/BTC/$selectedCurrency?apiKey=8442433A-0EC2-463B-B19C-850464CD3802');
+    var weatherData = await networkHelper.getData();
+    setState(() {
+      btcValue = weatherData['rate'];
+      print(btcValue);
+    });
+  }
+
+  //IOS
   CupertinoPicker iOSPicker() {
     List<Text> pickerItems = [];
 
@@ -74,7 +98,7 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                 child: Text(
-                  '1 BTC = ? USD',
+                  '1 BTC = ${btcValue.toInt()} $selectedCurrency',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,
