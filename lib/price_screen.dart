@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'crypto_element.dart';
-import 'api.dart';
+
 import 'coin_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io' show Platform;
