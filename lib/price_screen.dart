@@ -1,7 +1,10 @@
 import 'package:bitcoin_ticker/coin_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:bitcoin_ticker/networking.dart';
 import 'dart:io' show Platform;
+
+const url = 'https://rest.coinapi.io/v1/exchangerate';
 
 class PriceScreen extends StatefulWidget {
   @override
@@ -10,6 +13,40 @@ class PriceScreen extends StatefulWidget {
 
 class _PriceScreenState extends State<PriceScreen> {
   String selectedCurrency = 'USD';
+  dynamic btcData;
+  var asset_id_base;
+  var asset_id_quote;
+  dynamic rate;
+
+  @override
+  void initState() {
+    super.initState();
+
+    getBtcExchange(selectedCurrency);
+  }
+
+  Future<dynamic> getBtcExchange(String currency) async {
+    NetworkHelper networkHelper = NetworkHelper(
+        '$url/BTC/$currency?apikey=FAF80AFA-4CEA-46E7-B5EE-798409CE373D');
+
+    dynamic btcData = await networkHelper.getData();
+
+    return btcData;
+  }
+
+  void updateUi(dynamic btcData) {
+    setState(() {
+      if (btcData == null) {
+        asset_id_base = 'Error';
+        asset_id_quote = 'Error';
+        rate = 'no existing rate';
+
+        return;
+      }
+
+      rate = btcData['rate'];
+    });
+  }
 
   DropdownButton<String> androidDropdown() {
     List<DropdownMenuItem<String>> dropdownItems = [];
@@ -29,6 +66,7 @@ class _PriceScreenState extends State<PriceScreen> {
       onChanged: (value) {
         setState(() {
           selectedCurrency = value;
+          getBtcExchange(selectedCurrency);
         });
       },
     );
@@ -47,7 +85,7 @@ class _PriceScreenState extends State<PriceScreen> {
       backgroundColor: Colors.lightBlue,
       itemExtent: 32,
       onSelectedItemChanged: (selectedIndex) {
-        print(selectedIndex);
+        selectedCurrency = currenciesList[selectedIndex];
       },
       children: pickerItems,
     );
@@ -74,7 +112,7 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                 child: Text(
-                  '1 BTC = ? USD',
+                  '1 BTC =${rate}$selectedCurrency',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,
