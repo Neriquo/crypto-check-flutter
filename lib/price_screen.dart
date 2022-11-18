@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'dart:io' show Platform;
 import 'networking.dart';
 import 'constants.dart';
-import 'crypto.dart';
 
 class PriceScreen extends StatefulWidget {
   @override
@@ -16,7 +15,10 @@ class _PriceScreenState extends State<PriceScreen> {
 
 
   String selectedCurrency = 'USD';
-  double prix;
+  double prixBit;
+  double prixEth;
+  double prixLtc;
+
 
   @override
   void initState() {
@@ -24,16 +26,36 @@ class _PriceScreenState extends State<PriceScreen> {
     print('init');
     crypto(selectedCurrency);
   }
-  void updateUi(var cryptoData) {
+  void updateUi(var cryptoData, var cryptoData2, var cryptoDataLtc) {
     setState(() {
       if (cryptoData == null) {
-        prix = 0;
-print(cryptoData);
+        prixBit = 0;
+        print(cryptoData);
         return;
       } else {
 
-        prix = cryptoData['rate'];
-        print(prix);
+        prixBit = cryptoData['rate'];
+        print(prixBit);
+      }
+
+      if (cryptoData2 == null) {
+        prixEth = 0;
+        print(cryptoData2);
+        return;
+      } else {
+
+        prixEth = cryptoData2['rate'];
+        print(prixEth);
+      }
+
+      if (cryptoDataLtc == null) {
+        prixLtc = 0;
+        print(cryptoDataLtc);
+        return;
+      } else {
+
+        prixLtc = cryptoDataLtc['rate'];
+        print(prixLtc);
       }
 
       //weatherIcon = weather.getWeatherIcon(id);
@@ -49,7 +71,20 @@ print('$url/v1/exchangerate/$bitcoin/$selectedCurrency?$apiKey');
       );
       var cryptoData = await networkHelper.getData();
       print(cryptoData);
-      updateUi(cryptoData);
+      //updateUi(cryptoData);
+
+      NetworkHelper networkHelper2 = NetworkHelper(url :
+         '$url/v1/exchangerate/$ether/$selectedCurrency?$apiKey'
+      );
+      var cryptoData2 = await networkHelper2.getData();
+      print(cryptoData2);
+
+      NetworkHelper networkHelperLtc = NetworkHelper(url :
+          '$url/v1/exchangerate/LTC/$selectedCurrency?$apiKey'
+      );
+      var cryptoDataLtc = await networkHelperLtc.getData();
+      print(cryptoDataLtc);
+      updateUi(cryptoData, cryptoData2, cryptoDataLtc);
     }
 
 
@@ -130,7 +165,7 @@ print('$url/v1/exchangerate/$bitcoin/$selectedCurrency?$apiKey');
                   padding: EdgeInsets.symmetric(
                       vertical: 15.0, horizontal: 28.0),
                   child: Text(
-                    '1 BTC = ${prix.toInt()} $selectedCurrency',
+                    '1 BTC = ${prixBit.toInt()} $selectedCurrency',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 20.0,
@@ -141,12 +176,63 @@ print('$url/v1/exchangerate/$bitcoin/$selectedCurrency?$apiKey');
               ),
             ),
 
+
+            Padding(
+              padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+              child: Card(
+                color: Colors.lightBlueAccent,
+                elevation: 5.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 28.0),
+                  child: Text(
+                    '1 ETC = ${prixEth.toInt()} $selectedCurrency',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+              child: Card(
+                color: Colors.lightBlueAccent,
+                elevation: 5.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 28.0),
+                  child: Text(
+                    '1 LTC = ${prixLtc.toInt()} $selectedCurrency',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+
             Container(
+              margin: EdgeInsets.fromLTRB(0, 216, 0, 0),
+              //alignment: FractionalOffset.bottomCenter,
               height: 150.0,
               alignment: Alignment.center,
               padding: EdgeInsets.only(bottom: 30.0),
               color: Colors.lightBlue,
               child: Platform.isIOS ? iOSPicker() : androidDropdown(),
+
             ),
           ],
 
