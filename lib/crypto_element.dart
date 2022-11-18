@@ -6,15 +6,17 @@ class CryptoElement extends StatelessWidget {
     Key key,
     @required this.btcValue,
     @required this.asset_id_quote,
+    @required this.crypto,
   }) : super(key: key);
 
   final double btcValue;
   final String asset_id_quote;
+  final String crypto;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+      padding: EdgeInsets.fromLTRB(18.0, 15.0, 18.0, 0),
       child: Card(
         color: Colors.lightBlueAccent,
         elevation: 5.0,
@@ -25,7 +27,7 @@ class CryptoElement extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
           child: Text(
             //getCoinValue(selectedCurrency).;
-            '$bitcoinQuty BTC = ${btcValue.toInt()} $asset_id_quote',
+            '$bitcoinQuty $crypto = ${btcValue.toInt()} $asset_id_quote',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 20.0,
