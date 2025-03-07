@@ -22,7 +22,7 @@ NOTE: The CupertinoPicker/DropdownMenu is not supposed to work yet.
 
 # Step 5 - Display the latest price of 1 Bitcoin (BTC) in any currency selected by the user.
 
-The [coinapi.io](https://docs.coinapi.io/#get-specific-rate-get) API supports all the currencies in our *currenciesList*.
+The [coinapi.io](https://docs.coinapi.io/market-data/rest-api/exchange-rates/get-specific-rate) API supports all the currencies in our *currenciesList*.
 
 Goal: By the end of this challenge, this is the functionality you should end up with:
 
