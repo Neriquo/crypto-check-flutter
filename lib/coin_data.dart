@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 enum Currency {
   AUD,
   BRL,
@@ -32,4 +34,16 @@ List<Currency> get currenciesList => Currency.values;
 
 List<Crypto> get cryptoList => Crypto.values;
 
-class CoinData {}
+class ExchangeRate {
+  late DateTime date;
+  Currency? currencyFrom;
+  Crypto? cryptoTo;
+  late Double rate;
+
+  ExchangeRate(DateTime date, Currency? currencyFrom, Crypto? cryptoTo, Double rate) {
+    this.date = date;
+    this.currencyFrom = currencyFrom;
+    this.cryptoTo = cryptoTo;
+    this.rate = rate;
+  }
+}
