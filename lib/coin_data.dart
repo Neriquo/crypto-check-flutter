@@ -18,7 +18,7 @@ const List<String> currenciesList = [
   'NZD',
   'PLN',
   'RON',
-  'RUB',
+  // cette devise ne fonctionne pas 'RUB',
   'SEK',
   'SGD',
   'USD',
