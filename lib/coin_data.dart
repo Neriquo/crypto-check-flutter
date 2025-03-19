@@ -38,7 +38,6 @@ const apiPath = '/v1/exchangerate';
 class CoinData {
   Future<double> getCryptoRate(String crypto, String currency) async {
     final uri = Uri.https(coinAPIURL, '$apiPath/$crypto/$currency');
-    print('Requesting: $uri');
 
     try {
       final response = await http.get(
@@ -47,18 +46,15 @@ class CoinData {
           'X-CoinAPI-Key': apiKey,
         },
       );
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
+
 
       if (response.statusCode == 200) {
         var decodedData = jsonDecode(response.body);
         return decodedData['rate'];
       } else {
-        print('Request failed with status: ${response.statusCode}');
         throw 'Problem with the get request';
       }
     } catch (e) {
-      print('Error in getCryptoRate: $e');
       rethrow;
     }
   }
@@ -70,7 +66,6 @@ class CoinData {
         double rate = await getCryptoRate(crypto, currency);
         rates[crypto] = rate;
       } catch (e) {
-        print('Error getting rate for $crypto: $e');
         rates[crypto] = 0.0;
       }
     }
