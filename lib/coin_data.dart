@@ -26,11 +26,11 @@ const List<String> currenciesList = [
   'ZAR'
 ];
 
-const List<String> cryptoList = [
-  'BTC',
-  'ETH',
-  'LTC',
-];
+Map<String, List<String>> cryptoList = {
+  "BTC": ['BTC', "0"],
+  "ETH": ['ETH', "0"],
+  "LTC": ['LTC', "0"]
+};
 
 class CoinData {
   String apiKey = 'a02c661f-97f4-4f76-8e7c-ac3b7a1a8d9e';

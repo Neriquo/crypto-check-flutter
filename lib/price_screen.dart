@@ -12,20 +12,31 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
-  String? selectedCurrency = 'USD';
+  String? selectedCurrency;
+  ChangeModele changeModele = ChangeModele();
 
-  Future<Double> getChangeData(String selectedCrypto) async {
+  initState() {
+    super.initState();
+    getChangeData("USD");
+  }
 
-      ChangeModele changeModele = ChangeModele();
-      var data = await changeModele.changeModele(
-          selectedCrypto, selectedCurrency);
-      print(data['rate'].toString());
-      return data['rate'];
+  void getChangeData(value) async {
+
+    selectedCurrency = value;
+    for (String crypto in cryptoList.keys) {
+      var data = await changeModele.changeModele(crypto, selectedCurrency);
+      print(data['rate'].round().toString());
+      print(selectedCurrency);
+
+      setState(() {
+        cryptoList[crypto]?[1] = data['rate'].round().toString();
+      });
+    };
   }
 
   List<Widget> showBody () {
     List<Widget> list = [];
-    for (String crypto in cryptoList) {
+    for (String crypto in cryptoList.keys) {
       list.add(
         Padding(
           padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
@@ -38,7 +49,8 @@ class _PriceScreenState extends State<PriceScreen> {
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
               child: Text(
-                '1 $crypto = ${getChangeData(crypto).toString()} $selectedCurrency',
+
+                ' 1 ${cryptoList[crypto]?[0]} = ${cryptoList[crypto]?[1]} $selectedCurrency',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20.0,
@@ -96,9 +108,8 @@ class _PriceScreenState extends State<PriceScreen> {
       value: selectedCurrency,
       items: dropdownItems,
       onChanged: (value) {
-        setState(() {
-          selectedCurrency = value;
-        });
+          getChangeData(value);
+
       },
     );
   }
