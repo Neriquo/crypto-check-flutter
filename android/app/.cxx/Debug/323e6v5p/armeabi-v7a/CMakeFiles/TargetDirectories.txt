@@ -1,0 +1,2 @@
+C:/Users/Khatir/StudioProjects/crypto-check-flutter/android/app/.cxx/Debug/323e6v5p/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/Khatir/StudioProjects/crypto-check-flutter/android/app/.cxx/Debug/323e6v5p/armeabi-v7a/CMakeFiles/rebuild_cache.dir
