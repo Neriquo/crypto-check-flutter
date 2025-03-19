@@ -29,11 +29,6 @@ const List<String> cryptoList = [
   'ETH',
   'LTC',
   'XRP',
-  'BCH',
-  'ADA',
-  'DOT',
-  'LINK',
-  'XLM',
   'DOGE',
 ];
 

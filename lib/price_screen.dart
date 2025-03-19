@@ -74,20 +74,21 @@ class _PriceScreenState extends State<PriceScreen> {
 
       cards.add(
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 5.0),
+          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 6.0),
           child: Card(
             color: Colors.lightBlueAccent,
             elevation: 5.0,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(15.0),
             ),
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 28.0),
               child: Text(
                 '1 $crypto = $rate $selectedCurrency',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
@@ -95,6 +96,7 @@ class _PriceScreenState extends State<PriceScreen> {
           ),
         ),
       );
+
     }
 
     return cards;
