@@ -15,7 +15,7 @@ const List<String> currenciesList = [
   'NZD',
   'PLN',
   'RON',
-  'RUB',
+  // 'RUB', n'existe plus car ereeur 550
   'SEK',
   'SGD',
   'USD',
