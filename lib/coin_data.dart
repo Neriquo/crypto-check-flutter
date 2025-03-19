@@ -28,8 +28,8 @@ enum Crypto {
   LTC,
 }
 
-List<String> get currenciesList => Currency.values.map((value) => value.name).toList();
+List<Currency> get currenciesList => Currency.values;
 
-List<String> get cryptoList => Crypto.values.map((value) => value.name).toList();
+List<Crypto> get cryptoList => Crypto.values;
 
 class CoinData {}

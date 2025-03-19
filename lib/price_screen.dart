@@ -10,16 +10,13 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
-  String? selectedCurrency = 'USD';
+  Currency? selectedCurrency = Currency.USD;
 
   CupertinoPicker iOSPicker() {
-    List<Text> pickerItems = [];
-
-    for (String currency in currenciesList) {
-      var newItem = Text(currency);
-
-      pickerItems.add(newItem);
-    }
+    List<Text> pickerItems = currenciesList
+        .map((currency) =>
+        Text(currency.name)
+    ).toList();
 
     return CupertinoPicker(
       backgroundColor: Colors.lightBlue,
@@ -31,24 +28,21 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 
-  DropdownButton<String> androidDropdown() {
-    List<DropdownMenuItem<String>> dropdownItems = [];
+  DropdownButton<Currency> androidDropdown() {
+    List<DropdownMenuItem<Currency>> dropdownItems = currenciesList
+        .map((currency) =>
+        DropdownMenuItem(
+          child: Text(currency.name),
+          value: currency,
+        )
+    ).toList();
 
-    for (String currency in currenciesList) {
-      var newItem = DropdownMenuItem(
-        child: Text(currency),
-        value: currency,
-      );
-
-      dropdownItems.add(newItem);
-    }
-
-    return DropdownButton<String>(
+    return DropdownButton<Currency>(
       value: selectedCurrency,
       items: dropdownItems,
-      onChanged: (value) {
+      onChanged: (Currency? newValue) {
         setState(() {
-          selectedCurrency = value;
+          selectedCurrency = newValue;
         });
       },
     );
