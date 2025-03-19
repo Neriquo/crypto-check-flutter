@@ -1,4 +1,4 @@
-enum Currencie {
+enum Currency {
   AUD,
   BRL,
   CAD,
@@ -28,7 +28,7 @@ enum Crypto {
   LTC,
 }
 
-List<String> get currenciesList => Currencie.values.map((value) => value.name).toList();
+List<String> get currenciesList => Currency.values.map((value) => value.name).toList();
 
 List<String> get cryptoList => Crypto.values.map((value) => value.name).toList();
 
