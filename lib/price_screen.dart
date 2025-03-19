@@ -116,9 +116,14 @@ class _PriceScreenState extends State<PriceScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          cryptoRateDisplayer(Crypto.BTC, currentRates[Crypto.BTC] ?? 0),
-          cryptoRateDisplayer(Crypto.ETH, currentRates[Crypto.ETH] ?? 0),
-          cryptoRateDisplayer(Crypto.LTC, currentRates[Crypto.LTC] ?? 0),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              cryptoRateDisplayer(Crypto.BTC, currentRates[Crypto.BTC] ?? 0),
+              cryptoRateDisplayer(Crypto.ETH, currentRates[Crypto.ETH] ?? 0),
+              cryptoRateDisplayer(Crypto.LTC, currentRates[Crypto.LTC] ?? 0),
+            ],
+          ),
           Container(
             height: 150.0,
             alignment: Alignment.center,
