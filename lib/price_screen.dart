@@ -11,13 +11,41 @@ class PriceScreen extends StatefulWidget {
 
 class _PriceScreenState extends State<PriceScreen> {
   String? selectedCurrency = 'USD';
+  Map<String, String> cryptoValues = {'BTC': '?', 'ETH': '?', 'LTC': '?'};
+  bool isLoading = false;
+  CoinData coinData = CoinData();
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  void getData() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      Map<String, String> data =
+          await coinData.getCryptoRates(selectedCurrency!);
+      setState(() {
+        cryptoValues = data;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Exception dans getData: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   CupertinoPicker iOSPicker() {
     List<Text> pickerItems = [];
 
     for (String currency in currenciesList) {
       var newItem = Text(currency);
-
       pickerItems.add(newItem);
     }
 
@@ -25,7 +53,10 @@ class _PriceScreenState extends State<PriceScreen> {
       backgroundColor: Colors.lightBlue,
       itemExtent: 32,
       onSelectedItemChanged: (selectedIndex) {
-        print(selectedIndex);
+        setState(() {
+          selectedCurrency = currenciesList[selectedIndex];
+          getData();
+        });
       },
       children: pickerItems,
     );
@@ -49,8 +80,39 @@ class _PriceScreenState extends State<PriceScreen> {
       onChanged: (value) {
         setState(() {
           selectedCurrency = value;
+          getData();
         });
       },
+      style: TextStyle(
+        fontSize: 30.0,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  Widget getCryptoCard(String crypto) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+      child: Card(
+        color: Colors.redAccent,
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+          child: isLoading
+              ? Center(child: CircularProgressIndicator(color: Colors.white))
+              : Text(
+                  '1 $crypto = ${cryptoValues[crypto]} $selectedCurrency',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.black,
+                  ),
+                ),
+        ),
+      ),
     );
   }
 
@@ -58,38 +120,28 @@ class _PriceScreenState extends State<PriceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bitcoin check'),
+        backgroundColor: Colors.red,
+        centerTitle: true,
+        title: Text(
+          'BITCOIN CHECK',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+        ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-            child: Card(
-              color: Colors.lightBlueAccent,
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-                child: Text(
-                  '1 BTC = ? USD',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children:
+                cryptoList.map((crypto) => getCryptoCard(crypto)).toList(),
           ),
           Container(
             height: 150.0,
             alignment: Alignment.center,
             padding: EdgeInsets.only(bottom: 30.0),
-            color: Colors.lightBlue,
+            color: Colors.red,
             child: Platform.isIOS ? iOSPicker() : androidDropdown(),
           ),
         ],
