@@ -1,43 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'price_screen.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  // Configure l'apparence de la barre de statut
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.dark,
+  ));
+
+  // Force l'orientation portrait pour une expérience mobile optimale
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Coin Ticker',
+      title: 'Crypto Tracker',
       theme: ThemeData(
-        primaryColor: Color(0xFF2962FF), // Material blue
-        scaffoldBackgroundColor: Color(0xFFF5F5F7), // Light background
-        colorScheme: ColorScheme.light(
-          primary: Color(0xFF2962FF),
-          secondary: Color(0xFF00B0FF),
-          surface: Colors.white,
-          background: Color(0xFFF5F5F7),
-        ),
+        primaryColor: Color(0xFF1A73E8),
+        scaffoldBackgroundColor: Color(0xFFF8F9FF),
+        fontFamily: 'Poppins',
         appBarTheme: AppBarTheme(
-          backgroundColor: Color(0xFF2962FF),
-          elevation: 0,
           centerTitle: true,
-        ),
-        cardTheme: CardTheme(
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          shadowColor: Colors.black26,
+          systemOverlayStyle: SystemUiOverlayStyle.light,
         ),
         textTheme: TextTheme(
           bodyMedium: TextStyle(color: Color(0xFF424242)),
-          titleLarge: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
         ),
-        fontFamily: 'Poppins',
       ),
       home: PriceScreen(),
     );
