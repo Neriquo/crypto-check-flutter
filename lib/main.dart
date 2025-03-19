@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'price_screen.dart';
 
 void main() {
-  // Configuration de base
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

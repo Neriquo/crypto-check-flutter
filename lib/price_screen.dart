@@ -19,7 +19,6 @@ class _PriceScreenState extends State<PriceScreen> {
     super.initState();
     getCryptoData();
 
-    // Effet de pulsation simple sans AnimationController
     Future.delayed(Duration(milliseconds: 800), () {
       if (mounted) {
         pulseEffect();
@@ -27,7 +26,6 @@ class _PriceScreenState extends State<PriceScreen> {
     });
   }
 
-  // Fonction simple pour créer un effet de pulsation sans controller
   void pulseEffect() {
     if (!mounted) return;
 
@@ -61,7 +59,6 @@ class _PriceScreenState extends State<PriceScreen> {
         isLoading = false;
       });
 
-      // Message d'erreur simple
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Erreur de connexion à l\'API: $e'),
@@ -183,7 +180,6 @@ class _PriceScreenState extends State<PriceScreen> {
   }
 
   Widget getCryptoCard(String crypto, double? rate) {
-    // Couleurs et icônes différentes selon la cryptomonnaie
     Color cardColor;
     IconData cryptoIcon;
 
@@ -305,7 +301,6 @@ class _PriceScreenState extends State<PriceScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            // En-tête simplifié
             Container(
               color: Colors.lightBlue.shade600,
               padding: EdgeInsets.only(bottom: 20, left: 20, right: 20),
@@ -317,7 +312,7 @@ class _PriceScreenState extends State<PriceScreen> {
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.white.withOpacity(0.85),
-                      fontWeight: FontWeight.w700,F
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                   SizedBox(height: 5),
@@ -358,7 +353,6 @@ class _PriceScreenState extends State<PriceScreen> {
               ),
             ),
 
-            // Liste de cryptomonnaies
             Expanded(
               child: ListView(
                 padding: EdgeInsets.only(top: 10),
@@ -366,7 +360,6 @@ class _PriceScreenState extends State<PriceScreen> {
               ),
             ),
 
-            // Sélecteur de devise simplifié
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
