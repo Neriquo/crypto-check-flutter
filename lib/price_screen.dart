@@ -12,11 +12,11 @@ class PriceScreen extends StatefulWidget {
 
 class _PriceScreenState extends State<PriceScreen> {
   Currency? selectedCurrency = null;
-  double currentRate = 0;
+  Map<Crypto, double> currentRates = Map();
 
-  void setCurrentRate(double newRate) {
+  void setCurrentRates(Crypto crypto, double newRate) {
     setState(() {
-      currentRate = (newRate * 100).round() / 100.0;
+      currentRates[crypto] = (newRate * 100).round() / 100.0;
     });
   }
 
@@ -58,24 +58,52 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 
+  Widget cryptoRateDisplayer(Crypto crypto, double rate) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+      child: Card(
+        color: Colors.lightBlueAccent,
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+          child: Text(
+            '1 ${crypto.name} = ${rate} ${selectedCurrency?.name ?? "no currency selected"}',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 20.0,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   void onCurrencyChanged(Currency? currency) {
     if (currency == null) {
       setState(() {
-        currentRate = 0;
+        currentRates = Map();
       });
       return;
     }
 
-    setState(() {
-      try {
-        getExchangeRateRates(currency, Crypto.BTC).then((response) => {
-          setCurrentRate(response.rate)
-        });
-      }
-      catch (e) {
-        print(e);
-      }
-    });
+    try {
+      getExchangeRateRates(currency, Crypto.BTC).then((response) => {
+        setCurrentRates(Crypto.BTC, response.rate)
+      });
+      getExchangeRateRates(currency, Crypto.ETH).then((response) => {
+        setCurrentRates(Crypto.ETH, response.rate)
+      });
+      getExchangeRateRates(currency, Crypto.LTC).then((response) => {
+        setCurrentRates(Crypto.LTC, response.rate)
+      });
+    }
+    catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -87,28 +115,10 @@ class _PriceScreenState extends State<PriceScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-            child: Card(
-              color: Colors.lightBlueAccent,
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-                child: Text(
-                  '1 BTC = ${currentRate} ${selectedCurrency?.name ?? "no currency selected"}',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
+        children: [
+          cryptoRateDisplayer(Crypto.BTC, currentRates[Crypto.BTC] ?? 0),
+          cryptoRateDisplayer(Crypto.ETH, currentRates[Crypto.ETH] ?? 0),
+          cryptoRateDisplayer(Crypto.LTC, currentRates[Crypto.LTC] ?? 0),
           Container(
             height: 150.0,
             alignment: Alignment.center,
@@ -123,3 +133,5 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 }
+
+
