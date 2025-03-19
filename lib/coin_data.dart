@@ -15,7 +15,7 @@ const List<String> currenciesList = [
   'NZD',
   'PLN',
   'RON',
-  'RUB',
+  //La monnaie RUB ne fonctionnait pas, surement en raison du conflit, je l'ai donc retiré
   'SEK',
   'SGD',
   'USD',
