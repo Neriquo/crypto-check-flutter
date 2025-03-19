@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bitcoin_ticker/coin_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,79 +9,109 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
-  String? selectedCurrency = 'USD';
+  String selectedCurrency = 'USD';
+  Map<String, String> cryptoRates = {};
+
+  @override
+  void initState() {
+    super.initState();
+    updateRates();
+  }
+
+  void updateRates() async {
+    try {
+      var rates = await CoinData().getAllCryptoData(selectedCurrency);
+      setState(() {
+        cryptoRates = {};
+        for (var crypto in cryptoList) {
+          double rate = rates[crypto] ?? 0.0;
+          cryptoRates[crypto] = rate.toStringAsFixed(2);
+        }
+      });
+    } catch (e) {
+      print('Erreur de chargement des données : $e');
+    }
+  }
 
   CupertinoPicker iOSPicker() {
-    List<Text> pickerItems = [];
-
-    for (String currency in currenciesList) {
-      var newItem = Text(currency);
-
-      pickerItems.add(newItem);
-    }
+    List<Text> pickerItems = currenciesList.map((c) => Text(c)).toList();
 
     return CupertinoPicker(
       backgroundColor: Colors.lightBlue,
       itemExtent: 32,
       onSelectedItemChanged: (selectedIndex) {
-        print(selectedIndex);
+        setState(() {
+          selectedCurrency = currenciesList[selectedIndex];
+        });
+        updateRates();
       },
       children: pickerItems,
     );
   }
 
   DropdownButton<String> androidDropdown() {
-    List<DropdownMenuItem<String>> dropdownItems = [];
-
-    for (String currency in currenciesList) {
-      var newItem = DropdownMenuItem(
-        child: Text(currency),
-        value: currency,
-      );
-
-      dropdownItems.add(newItem);
-    }
+    List<DropdownMenuItem<String>> dropdownItems = currenciesList
+        .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+        .toList();
 
     return DropdownButton<String>(
       value: selectedCurrency,
       items: dropdownItems,
       onChanged: (value) {
         setState(() {
-          selectedCurrency = value;
+          selectedCurrency = value!;
         });
+        updateRates();
       },
     );
+  }
+
+  List<Widget> getCryptoCards() {
+    List<Widget> cards = [];
+
+    for (String crypto in cryptoList) {
+      String rate = cryptoRates[crypto] ?? '?';
+
+      cards.add(
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 5.0),
+          child: Card(
+            color: Colors.lightBlueAccent,
+            elevation: 5.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+              child: Text(
+                '1 $crypto = $rate $selectedCurrency',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return cards;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bitcoin check'),
+        title: Text('Crypto Check'),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-            child: Card(
-              color: Colors.lightBlueAccent,
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-                child: Text(
-                  '1 BTC = ? USD',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+          Expanded(
+            child: ListView(
+              children: getCryptoCards(),
             ),
           ),
           Container(
