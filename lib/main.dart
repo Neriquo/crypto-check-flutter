@@ -3,19 +3,22 @@ import 'package:flutter/services.dart';
 import 'price_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Configure l'apparence de la barre de statut
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
+    systemNavigationBarColor: Colors.white,
+    systemNavigationBarIconBrightness: Brightness.dark,
   ));
 
   // Force l'orientation portrait pour une expérience mobile optimale
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
-
-  runApp(MyApp());
+  ]).then((_) {
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -23,17 +26,48 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Crypto Tracker',
+      title: 'CryptoTracker',
       theme: ThemeData(
         primaryColor: Color(0xFF1A73E8),
-        scaffoldBackgroundColor: Color(0xFFF8F9FF),
+        colorScheme: ColorScheme.light(
+          primary: Color(0xFF1A73E8),
+          secondary: Color(0xFF5BB974),
+          surface: Colors.white,
+          background: Color(0xFFF8FAFF),
+        ),
+        scaffoldBackgroundColor: Color(0xFFF8FAFF),
         fontFamily: 'Poppins',
         appBarTheme: AppBarTheme(
           centerTitle: true,
+          elevation: 0,
           systemOverlayStyle: SystemUiOverlayStyle.light,
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(
+            color: Color(0xFF1A73E8),
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+        cardTheme: CardTheme(
+          elevation: 5,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
         ),
         textTheme: TextTheme(
-          bodyMedium: TextStyle(color: Color(0xFF424242)),
+          titleLarge: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1A73E8),
+          ),
+          bodyMedium: TextStyle(
+            color: Color(0xFF424242),
+          ),
         ),
       ),
       home: PriceScreen(),
