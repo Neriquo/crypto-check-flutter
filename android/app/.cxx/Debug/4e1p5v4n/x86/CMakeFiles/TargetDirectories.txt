@@ -1,0 +1,2 @@
+C:/Users/Dell/StudioProjects/crypto-check-flutter/android/app/.cxx/Debug/4e1p5v4n/x86/CMakeFiles/edit_cache.dir
+C:/Users/Dell/StudioProjects/crypto-check-flutter/android/app/.cxx/Debug/4e1p5v4n/x86/CMakeFiles/rebuild_cache.dir
