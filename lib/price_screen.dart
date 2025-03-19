@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'coin_data.dart';
 
-const apiKey = 'a02c661f-97f4-4f76-8e7c-ac3b7a1a8d9e'; //CL2 API
-const coinAPIURL = 'https://rest.coinapi.io/v1/exchangerate';
-
 class PriceScreen extends StatefulWidget {
   @override
   _PriceScreenState createState() => _PriceScreenState();
@@ -15,7 +12,11 @@ class PriceScreen extends StatefulWidget {
 class _PriceScreenState extends State<PriceScreen> {
   String selectedCurrency = 'USD';
 
+  // stocke les prix récupérés pour chaque crypto
   Map<String, String> coinValues = {};
+
+  // instance de la classe CoinData
+  CoinData coinData = CoinData();
 
   @override
   void initState() {
@@ -23,39 +24,47 @@ class _PriceScreenState extends State<PriceScreen> {
     getData();
   }
 
+  // méthode pour récupérer les prix depuis l'API
   void getData() async {
     for (String crypto in cryptoList) {
-      var response = await http.get(
-        Uri.parse('$coinAPIURL/$crypto/$selectedCurrency?apikey=$apiKey'),
-      );
-
-      var decodedData = jsonDecode(response.body);
-
+      String rate = await coinData.getCoinData(crypto, selectedCurrency);
       setState(() {
-        double rate = decodedData['rate'];
-        coinValues[crypto] = rate.toStringAsFixed(2);
+        coinValues[crypto] = rate;
       });
     }
   }
 
+  // menu déroulant de selection des devises
   DropdownButton<String> androidDropdown() {
     List<DropdownMenuItem<String>> dropdownItems = [];
     for (String currency in currenciesList) {
       dropdownItems.add(
         DropdownMenuItem(
-          child: Text(currency),
+          child: Text(
+            currency,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20.0,
+            ),
+          ),
           value: currency,
         ),
       );
     }
 
     return DropdownButton<String>(
+      dropdownColor: Colors.lightBlue, // rend le menu déroulant light blue
+      style: TextStyle(
+        // la couleur du texte selectionné rest noir
+        color: Colors.black,
+      ),
       value: selectedCurrency,
       items: dropdownItems,
       onChanged: (value) {
         setState(() {
           selectedCurrency = value!;
-          getData();
+          getData(); // recharge les données lors du changement de devise
         });
       },
     );
@@ -63,6 +72,7 @@ class _PriceScreenState extends State<PriceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // génère une liste de widgets pour chaque crypto
     List<Widget> cryptoCards = [];
     for (String crypto in cryptoList) {
       cryptoCards.add(
@@ -76,7 +86,13 @@ class _PriceScreenState extends State<PriceScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bitcoin check'),
+        title: Text(
+          'Coin Ticker 💹',
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 25.0),
+        ),
+        backgroundColor: Colors.lightBlue.shade100,
+        centerTitle: true,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -90,7 +106,7 @@ class _PriceScreenState extends State<PriceScreen> {
             height: 150.0,
             alignment: Alignment.center,
             padding: EdgeInsets.only(bottom: 30.0),
-            color: Colors.lightBlue,
+            color: Colors.lightBlue.shade100,
             child: androidDropdown(),
           ),
         ],
@@ -99,6 +115,7 @@ class _PriceScreenState extends State<PriceScreen> {
   }
 }
 
+// widget réutilisable affichant les cartes de cryptos
 class CryptoCard extends StatelessWidget {
   CryptoCard(
       {required this.currencyValue,
@@ -127,6 +144,7 @@ class CryptoCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 20.0,
               color: Colors.white,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
