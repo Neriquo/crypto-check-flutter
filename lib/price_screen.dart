@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bitcoin_ticker/coin_data.dart';
+import 'package:bitcoin_ticker/data/exchanges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,9 +11,16 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
-  Currency? selectedCurrency = Currency.USD;
+  Currency? selectedCurrency = null;
+  double currentRate = 0;
 
-  CupertinoPicker iOSPicker() {
+  void setCurrentRate(double newRate) {
+    setState(() {
+      currentRate = (newRate * 100).round() / 100.0;
+    });
+  }
+
+  CupertinoPicker iOSPicker([void onChange(Currency? currency)?]) {
     List<Text> pickerItems = currenciesList
         .map((currency) =>
         Text(currency.name)
@@ -22,13 +30,13 @@ class _PriceScreenState extends State<PriceScreen> {
       backgroundColor: Colors.lightBlue,
       itemExtent: 32,
       onSelectedItemChanged: (selectedIndex) {
-        print(selectedIndex);
+        if (onChange != null) onChange(currenciesList[selectedIndex]);
       },
       children: pickerItems,
     );
   }
 
-  DropdownButton<Currency> androidDropdown() {
+  DropdownButton<Currency> androidDropdown([void onChange(Currency? currency)?]) {
     List<DropdownMenuItem<Currency>> dropdownItems = currenciesList
         .map((currency) =>
         DropdownMenuItem(
@@ -38,14 +46,36 @@ class _PriceScreenState extends State<PriceScreen> {
     ).toList();
 
     return DropdownButton<Currency>(
+      hint: Text("select a currency"),
       value: selectedCurrency,
       items: dropdownItems,
       onChanged: (Currency? newValue) {
         setState(() {
           selectedCurrency = newValue;
+          if (onChange != null) onChange(newValue);
         });
       },
     );
+  }
+
+  void onCurrencyChanged(Currency? currency) {
+    if (currency == null) {
+      setState(() {
+        currentRate = 0;
+      });
+      return;
+    }
+
+    setState(() {
+      try {
+        getExchangeRateRates(currency, Crypto.BTC).then((response) => {
+          setCurrentRate(response.rate)
+        });
+      }
+      catch (e) {
+        print(e);
+      }
+    });
   }
 
   @override
@@ -69,7 +99,7 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                 child: Text(
-                  '1 BTC = ? ${selectedCurrency?.name ?? "no currency selected"}',
+                  '1 BTC = ${currentRate} ${selectedCurrency?.name ?? "no currency selected"}',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,
@@ -84,7 +114,9 @@ class _PriceScreenState extends State<PriceScreen> {
             alignment: Alignment.center,
             padding: EdgeInsets.only(bottom: 30.0),
             color: Colors.lightBlue,
-            child: Platform.isIOS ? iOSPicker() : androidDropdown(),
+            child: Platform.isIOS
+                ? iOSPicker(onCurrencyChanged)
+                : androidDropdown(onCurrencyChanged),
           ),
         ],
       ),

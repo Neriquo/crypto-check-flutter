@@ -9,8 +9,8 @@ Future<ExchangeRate> getExchangeRateRates(
     ) async {
   Response response = await get(
       Uri.https("api-realtime.exrates.coinapi.io",
-          "/v1/exchangerate/${currencyFrom.name}/${cryptoTo.name}",
-          {"apikey": "7d1633b1"})
+          "/v1/exchangerate/${cryptoTo.name}/${currencyFrom.name}",
+          {"apikey": "573187c8-0ac5-4027-80f7-7f0ac57f7861"})
   );
 
   if (response.statusCode != 200) {
@@ -21,9 +21,9 @@ Future<ExchangeRate> getExchangeRateRates(
   dynamic data = jsonDecode(response.body);
 
   Currency? responseCurrency = currenciesList
-      .firstWhere((testCurrency) => testCurrency.name == data.asset_id_base);
+      .firstWhere((testCurrency) => testCurrency.name == data["asset_id_quote"]);
   Crypto? responseCrypto = cryptoList
-      .firstWhere((cryptoTest) => data.asset_id_quote);
+      .firstWhere((cryptoTest) => cryptoTest.name == data["asset_id_base"]);
 
-  return new ExchangeRate(data.date, responseCurrency, responseCrypto, data.rate);
+  return new ExchangeRate(DateTime.parse(data["time"]), responseCurrency, responseCrypto, data["rate"]);
 }

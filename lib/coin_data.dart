@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 enum Currency {
   AUD,
   BRL,
@@ -38,9 +36,9 @@ class ExchangeRate {
   late DateTime date;
   Currency? currencyFrom;
   Crypto? cryptoTo;
-  late Double rate;
+  late double rate;
 
-  ExchangeRate(DateTime date, Currency? currencyFrom, Crypto? cryptoTo, Double rate) {
+  ExchangeRate(DateTime date, Currency? currencyFrom, Crypto? cryptoTo, double rate) {
     this.date = date;
     this.currencyFrom = currencyFrom;
     this.cryptoTo = cryptoTo;
